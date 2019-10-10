@@ -1,0 +1,7 @@
+virtual/
+.idea/
+.env
+__pycache__/
+*.pyc
+media/
+.vscode
