@@ -2,8 +2,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from .models import *
+from .forms import *
+
 
 # Create your views here.
+def login(request):
+    return render(request, 'registration/login.html',)
+
+def register(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/registration_form.html', {'form': form})
+
+def logout(request):
+    return render(request, 'registration/logout.html')
+
 @login_required(login_url='/accounts/login/')
 def home(request):
     image_form = PostForm()
