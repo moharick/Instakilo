@@ -56,3 +56,43 @@ class Profile(models.Model):
     @property
     def follows(self):
         return [follow.followee for follow in self.following.all()]
+
+
+class Post(models.Model):
+
+    user = models.ForeignKey(Profile, related_name='posts')
+    image = models.ImageField(upload_to='posts/')
+    caption = models.CharField(max_length=250, blank=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
+
+    @property
+    def get_comments(self):
+        return self.comments.all()
+
+    @property
+    def count_likes(self):
+        return self.photolikes.count()
+
+    class Meta:
+        ordering = ["-pk"]
+
+class Comment(models.Model):
+    text = models.TextField()
+    photo = models.ForeignKey(Post, related_name='comments')
+    user = models.ForeignKey(Profile, related_name='comments')
+    created = models.DateTimeField(auto_now_add=True, null=True)
+
+class Likes(models.Model):
+    user = models.ForeignKey(Profile, related_name='mylikes')
+    photo = models.ForeignKey(Post, related_name='photolikes')
+
+class Saves(models.Model):
+    user = models.ForeignKey(Profile, related_name='saves')
+    photo = models.ForeignKey(Post)
+
+    class Meta:
+        ordering = ["-pk"]
+
+class Follows(models.Model):
+    follower = models.ForeignKey(Profile, related_name='following')
+    followee = models.ForeignKey(Profile, related_name='followers')
