@@ -1,0 +1,55 @@
+{%extends 'registration/base.html'%}
+{% load bootstrap4 %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="login">
+        <div class="l-image">
+            <img src="../../static/images/gramm.png" alt="login ">
+        </div>
+        <div class="l-form">
+            {% if form.errors %}
+            <p> Password or Username is incorrect </p>
+            {% endif %}
+            <div class="panel panel-default">
+                <img src="../../static/images/instalogo.svg" alt="signuplogo "
+                    style="width:250px; height:80px;margin: 5px auto; display: block;">
+                <div class="panel-body">
+                    <form action="/accounts/login/" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Login">
+                        </div>
+                        <div class="col-xs-10"></div>
+                        <h2 class="text-center">
+                            <small>OR</small>
+                        </h2>
+                        <div class="col-xs-2"></div>
+                        <div class="panel-heading">
+                            <p>Don't have an account?</p>
+                            <a href="/register/" class="btn btn-primary btn-sm pull-right">Sign Up</a>
+                        </div>
+                        <input type="hidden" name="next" value="{{next}}">
+                    </form>
+                </div>
+            </div>
+            <br>
+            <div class="l-footer">
+                <div class="plastore">
+                    <a href="https://play.google.com/store/search?q=instagram"><img
+                            src="../../static/images/playstore.svg" alt="playstore "
+                            style="width:150px; height:40px"></a>
+                </div>
+                <div class="applestore">
+                    <a href="https://www.apple.com/us/search/instagram?src=itunes_serp">
+                        <img src="../../static/images/applestore.jpeg" alt="applestore"
+                        style="width:150px; height:40px"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
