@@ -1,0 +1,30 @@
+body{
+  background-color: #fafafa!important;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    margin-top: 4%;
+    width: 108%;
+
+  }
+
+.l-image{
+    width: 650px;
+    height: 680px;
+  }
+
+.l-form{
+    width: 25%;
+    margin-left: 3%;
+    margin-top: 6%;
+
+  }
+
+.l-footer{
+    display: flex;
+    justify-content: center;
+
+  }
