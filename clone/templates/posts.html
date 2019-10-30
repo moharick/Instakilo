@@ -1,0 +1,13 @@
+{% load bootstrap4 %}
+{% for post in user_images %}
+<div style="background-image: url({{post.image.url}})" class="post col-6 col-sm-4 col-md-3">
+    <div class="photoinfo">
+        <div class="info">
+            <span class="kim instaicon"></span>
+            <span class="infotext">{{post.photolikes.count}}</span>
+            <span class="wazo instaicon"></span>
+            <span class="infotext">{{post.comments.count}}</span>
+        </div>
+    </div>
+</div>
+{% endfor %}

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate,login
 from .models import *
 from .forms import *
 
@@ -29,14 +30,14 @@ def logout(request):
 
 @login_required(login_url='/accounts/login/')
 def home(request):
-    image_form = PostForm()
+    form = PostForm()
     images = Post.objects.all()
     commentform = CommentForm()
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             request.user.profile.post(form)
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'images': images, 'form':form})
 
 @login_required(login_url='/accounts/login/')
 def myprofile(request):
@@ -47,6 +48,17 @@ def myprofile(request):
     user_liked = [like.photo for like in user_object.profile.mylikes.all()]
     print(user_liked)
     return render(request, 'myprofile.html')
+
+@login_required(login_url='/accounts/login/')
+def user(request, user_id):
+    user_object=get_object_or_404(User, pk=user_id)
+    if request.user == user_object:
+        return redirect('myaccount')
+    isfollowing = user_object.profile not in request.user.profile.follows
+    user_images = user_object.profile.posts.all()
+    user_liked = [like.photo for like in user_object.profile.mylikes.all()]
+    return render(request, 'profile.html')
+
 
 @login_required(login_url='/accounts/login/')
 def update(request):
@@ -63,18 +75,7 @@ def update(request):
             return redirect('myaccount')
     else:
         new_profile = ProfileForm(instance=request.user.profile)
-    return render(request, 'update.html')
-
-@login_required(login_url='/accounts/login/')
-def user(request, user_id):
-    user_object=get_object_or_404(User, pk=user_id)
-    if request.user == user_object:
-        return redirect('myaccount')
-    isfollowing = user_object.profile not in request.user.profile.follows
-    user_images = user_object.profile.posts.all()
-    user_liked = [like.photo for like in user_object.profile.mylikes.all()]
-    return render(request, 'profile.html')
-
+    return render(request, 'update.html', locals())
 
 @login_required(login_url='/accounts/login/')
 def comment_on(request, post_id):
@@ -120,3 +121,8 @@ def togglefollow(request, user_id):
 def find(request, name):
     results = Profile.find_profile(name)
     return render(request, 'search.html')
+
+
+
+
+
